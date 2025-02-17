@@ -10,7 +10,7 @@ import java.util.Random;
 class Riches2RagsMachine {
     final private String name;
     final private double[] probabilities;
-    final private int[] payouts = {0, 1, 5, 100};
+    final private int[] payouts = { 0, 1, 5, 100 };
     final private Random random;
 
     public Riches2RagsMachine(String name, double[] probabilities) {
@@ -33,7 +33,8 @@ class Riches2RagsMachine {
                 return payouts[i]; // Return the corresponding payout
             }
         }
-        return 0; // If somehow nothing matches, return Php 0 (shouldn't happen in the first place!!)
+        return 0; // If somehow nothing matches, return Php 0 (shouldn't happen in the first
+                  // place!!)
     }
 
     public String getName() {
@@ -70,6 +71,12 @@ class DinMarkAi {
         System.out.println("\n It's Time to Gamble!!! ");
 
         for (int round = 1; round <= totalRounds; round++) {
+
+            if (money < 1) { // Stop playing if money is zero
+                System.out.println("\n Out of money! Can't Gamble anymore :(");
+                break;
+            }
+
             Riches2RagsMachine chosenSlot = chooseSlot();
             int payOff = chosenSlot.play();
             money += (payOff - 1); // Pay Php 1 to play, add winnings
@@ -96,16 +103,46 @@ class DinMarkAi {
     }
 
     /*
+     * IMPLEMENTED BY MARK
      * Determines which slot machine to play
      * - First 6 rounds: Try both machines equally (3 rounds each)
      * - After that, choose the one with the highest average payout
      */
+
+    /*
+     * private Riches2RagsMachine chooseSlot() {
+     * if (playsOnA + playsOnB < 6) {
+     * return (playsOnA < 3) ? slotA : slotB; // Try A for 3 rounds, then B for 3
+     * rounds
+     * }
+     * 
+     * // Calculate average winnings per play
+     * double avgA = (playsOnA == 0) ? 0 : winningsA / (double) playsOnA;
+     * double avgB = (playsOnB == 0) ? 0 : winningsB / (double) playsOnB;
+     * 
+     * return (avgA > avgB) ? slotA : slotB; // Choose the more profitable machine
+     * }
+     */
+
+    /*
+     * Determines which slot machine to play
+     * - Gets the possible totalRounds from the totalPlaytime
+     * - Divide the total Round into 3/5
+     * - The 3/5 will serve as the exploring phase
+     * - The remaining 2/5 will be the educated guess
+     * - Educated guess, choose the one with the highest average payout
+     */
+
     private Riches2RagsMachine chooseSlot() {
-        if (playsOnA + playsOnB < 6) {
-            return (playsOnA < 3) ? slotA : slotB; // Try A for 3 rounds, then B for 3 rounds
+        // 3/5 ratio of totalRounds for exploring slot machine
+        int explorationRounds = (int) ((totalRounds * 3) / 5.0);
+
+        if (playsOnA + playsOnB < explorationRounds) {
+            // Try both slot machines equally during exploring segment
+            return (playsOnA <= playsOnB) ? slotA : slotB;
         }
 
-        // Calculate average winnings per play
+        // Calculate average winnings per play after exploring
         double avgA = (playsOnA == 0) ? 0 : winningsA / (double) playsOnA;
         double avgB = (playsOnB == 0) ? 0 : winningsB / (double) playsOnB;
 
@@ -114,7 +151,8 @@ class DinMarkAi {
 }
 
 /*
- * ShadyCasino manages the game and connects the DinMarkAi with the Riches2RagsMachine
+ * ShadyCasino manages the game and connects the DinMarkAi with the
+ * Riches2RagsMachine
  * - Creates the slot machines and the agent
  * - Runs the game until the total playtime is used up
  */
@@ -153,16 +191,14 @@ public class Main {
          * - NOTE: Each round is 10 seconds
          ***************
          */
-        //  SAMPLE INPUT
-        //***********************************/
+        // SAMPLE INPUT
+        // ***********************************/
         int money = 20;
         int totalPlayTime = 100;
 
-
-
-        double[] slotAChances = {50, 30, 15, 5}; 
-        double[] slotBChances = {40, 35, 20, 5}; 
-        //***********************************/
+        double[] slotAChances = { 50, 30, 15, 5 };
+        double[] slotBChances = { 40, 35, 20, 5 };
+        // ***********************************/
         /*
          * Create the instance of the ShadyCasino and start the game
          * The agent inside will make decisions based on winnings
@@ -171,4 +207,3 @@ public class Main {
         casino.runGame();
     }
 }
-
