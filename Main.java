@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 /* 
  * Riches2RagsMachine represents a slot machine in the Escobar Casino.
@@ -146,6 +147,10 @@ class DinMarkAi {
         double avgA = (playsOnA == 0) ? 0 : winningsA / (double) playsOnA;
         double avgB = (playsOnB == 0) ? 0 : winningsB / (double) playsOnB;
 
+        System.out.println("Slot A average:" + avgA);
+        System.out.println("Slot B average:" + avgB);
+        System.out.println("The slot with the higher average is: " + ((avgA > avgB) ? "slotA" : "slotB"));
+
         return (avgA > avgB) ? slotA : slotB; // Choose the more profitable machine
     }
 }
@@ -193,11 +198,34 @@ public class Main {
          */
         // SAMPLE INPUT
         // ***********************************/
-        int money = 20;
-        int totalPlayTime = 100;
+        int money = 0;
+        int totalPlayTime = 0;
 
-        double[] slotAChances = { 50, 30, 15, 5 };
-        double[] slotBChances = { 40, 35, 20, 5 };
+        // double[] slotAChances = { 50, 30, 15, 5 };
+        // double[] slotBChances = { 40, 35, 20, 5 };
+
+        // double[] slotAChances = { 10, 35, 50, 5 };
+
+        double[] slotAChances = { 0, 0, 0, 0 };
+        double[] slotBChances = { 0, 0, 0, 0 };
+
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter Money:");
+        money = Integer.parseInt(sc.nextLine());
+        System.out.println("Enter Time in seconds:");
+        totalPlayTime = Integer.parseInt(sc.nextLine());
+
+        System.out.println("Enter Slot a chances:");
+        for (int i = 0; i < 4; i++) {
+            slotAChances[i] = Double.parseDouble(sc.nextLine());
+        }
+
+        System.out.println("Enter Slot b chances:");
+        for (int i = 0; i < 4; i++) {
+            slotBChances[i] = Double.parseDouble(sc.nextLine());
+        }
+
         // ***********************************/
         /*
          * Create the instance of the ShadyCasino and start the game
